@@ -67,7 +67,7 @@ class Item(Base):
 
 
 
-engine = create_engine('postgresql://catalog:catalog:postgres@localhost/catalog')
+engine = create_engine('postgresql://catalog:postgres@localhost/catalog')
 
 
 
