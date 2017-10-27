@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Northern Nevada Desert Plants- Login</title>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+		<!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+		<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+	</head>
+
+
+	<body>
+		<div id="logon_screen">
+			<div class="row top-menu">
+				<div class="col-md-10"></div>
+			</div>
+			<div class="row banner main" style="margin: 0 auto; width: 100%; text-align: center;">
+				<div class="col-md-1"></div>
+				<div class="col-md-11 padding-none">
+					<h1>Northern Nevada Desert Plants</h1>
+				</div>
+			</div>
+			<img src="{{url_for('static', filename='blank_user.gif') }}" style="margin-top: 25px;" alt=""></img>
+			<p>Kindly sign in to continue your journey</p>
+			<!-- GOOGLE PLUS SIGN IN-->
+		  <div id="signInButton">
+		    <span class="g-signin"
+		      data-scope="openid email"
+		      data-clientid="208225479609-vsgkql7jsmgcc397omg6gb0sfvc2sqgr.apps.googleusercontent.com"
+		      data-redirecturi="postmessage"
+		      data-accesstype="offline"
+		      data-cookiepolicy="single_host_origin"
+		      data-callback="signInCallback"
+		      data-approvalprompt="force">
+		    </span>
+			</div>
+
+
+			<div id="result"></div>
+
+
+			<script>
+			function signInCallback(authResult) {
+			  if (authResult['code']) {
+
+			    // Hide the sign-in button now that the user is authorized
+			    $('#signinButton').attr('style', 'display: none');
+
+			    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main category page
+			    $.ajax({
+			      type: 'POST',
+			      url: '/gconnect?state={{STATE}}',
+			      processData: false,
+			      data: authResult['code'],
+			      contentType: 'application/octet-stream; charset=utf-8',
+			      success: function(result) {
+			        // Handle or verify the server response if necessary.
+			        if (result) {
+			          document.getElementById("logon_screen").innerHTML = '</br></br></br>Login Successful!</br>'+ result + '</br></br>Redirecting...'
+			         setTimeout(function() {
+			          window.location.href = "/category";
+			         }, 4000);
+
+
+			      } else if (authResult['error']) {
+
+			    console.log('There was an error: ' + authResult['error']);
+			  } else {
+			        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+			         }
+
+			      }
+
+			  }); } }
+			</script>
+			<!--END GOOGLE PLUS SIGN IN -->
+		</div>
+	</body>
+</html>
